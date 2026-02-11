@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ghumoo – Trip Plan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="min-h-screen py-10 px-4 fade-in">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+        <!-- Header -->
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-gray-800">Ghumoo</h1>
+            <p class="text-gray-500 text-sm">Your travel plan</p>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <p class="text-gray-500">Destination</p>
+                    <p class="font-semibold">{{ destination }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Duration</p>
+                    <p class="font-semibold">{{ days }} Days</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">People</p>
+                    <p class="font-semibold">{{ people }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Budget</p>
+                    <p class="font-semibold">₹{{ budget }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">Estimated Cost</p>
+                    <p class="font-semibold text-green-600">₹{{ total_cost }}</p>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="budgetBar"
+                         class="bg-gray-800 h-2 rounded-full transition-all duration-700"
+                         style="width: 0%;">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                    {{ budget_percentage }}% of budget used
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Itinerary -->
+        <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800">Itinerary</h2>
+
+            {% for day in itinerary %}
+            <div class="bg-white rounded-lg shadow-sm p-5 space-y-3">
+                <h3 class="font-semibold text-gray-700">
+                    Day {{ day.day }} – {{ day.title }}
+                </h3>
+
+                {% for activity in day.activities %}
+                <div class="text-sm text-gray-600">
+                    <span class="font-medium text-gray-800">
+                        {{ activity.time }}
+                    </span>
+                    – {{ activity.location }}
+                    <br>
+                    <span class="text-gray-500">
+                        {{ activity.description }}
+                    </span>
+                    <div class="text-xs text-gray-400 mt-1">
+                        ₹{{ activity.estimatedCost }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                Cost Breakdown
+            </h2>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                {% for item in cost_breakdown %}
+                <div>
+                    <p class="text-gray-500">{{ item.category }}</p>
+                    <p class="font-semibold">₹{{ item.amount }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="/"
+               class="inline-block px-6 py-2 bg-gray-800 text-white rounded-md text-sm
+               hover:bg-gray-700 transition">
+                Plan Another Trip
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const percentage = parseFloat("{{ budget_percentage }}");
+    const bar = document.getElementById("budgetBar");
+    if (bar) {
+        bar.style.width = percentage + "%";
+    }
+});
+</script>
+
+</body>
+</html>
